@@ -1,11 +1,14 @@
 import { useState } from 'react'
+import Filter from './componentsPhonebookStep5/Filter'
+import PersonForm from './componentsPhonebookStep5/PersonForm'
+import Persons from './componentsPhonebookStep5/Persons'
 
 const App = () => {
   const [persons, setPersons] = useState([
-    { name: 'Arto Hellas', number: '040-123456', id: 1 },
-    { name: 'Ada Lovelace', number: '39-44-5323523', id: 2 },
-    { name: 'Dan Abramov', number: '12-43-234345', id: 3 },
-    { name: 'Mary Poppendieck', number: '39-23-6423122', id: 4 }
+    { name: 'Arto Hellas', phone: '040-123456', id: 1 },
+    { name: 'Ada Lovelace', phone: '39-44-5323523', id: 2 },
+    { name: 'Dan Abramov', phone: '12-43-234345', id: 3 },
+    { name: 'Mary Poppendieck', phone: '39-23-6423122', id: 4 }
   ])
 
   const [newName, setNewName] = useState('')
@@ -49,23 +52,13 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <div>
-        filter shown with <input value={search} onChange={handleSearchChange} />
-      </div>
+      <Filter search={search} handleSearchChange={handleSearchChange}/>
       <h2>Add a new</h2>
-      <form onSubmit={addContact}>
-        <div style={{ display: "flex", flexDirection: "column" }}>
-          name: <input value={newName} onChange={handleNameChange} style={{ width: "100px" }} />
-          phone: <input value={newPhone} onChange={handlePhoneChange} style={{ width: "100px" }} />
-        </div>
-        <div>
-          <button type="submit" style={{ marginTop: "10px" }}>add</button>
-        </div>
-      </form>
+      <PersonForm newName={newName} newPhone={newPhone} handleNameChange={handleNameChange}
+      handlePhoneChange={handlePhoneChange} addContact={addContact}
+      />
       <h2>Numbers</h2>
-      {filteredPersons.map((person) => (
-        <p key={person.name}>{person.name}</p>
-      ))}
+      <Persons filteredPersons={filteredPersons} />
     </div>
   )
 }
