@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import { useState, useEffect} from 'react'
+import axios from 'axios'
 import Filter from './componentsPhonebookStep5/Filter'
 import PersonForm from './componentsPhonebookStep5/PersonForm'
 import Persons from './componentsPhonebookStep5/Persons'
@@ -14,6 +15,16 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newPhone, setNewPhone] = useState('')
   const [search, setSearch] = useState('')
+
+  useEffect(() => {
+    console.log('effect')
+    axios
+      .get('http://localhost:3001/persons')
+      .then(response => {
+        console.log('promise fulfilled')
+        setPersons(response.data)
+      })
+  }, [])
 
   const addContact = (event) => {
     event.preventDefault()
