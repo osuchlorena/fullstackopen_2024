@@ -64,6 +64,15 @@ const App = () => {
       })
   }
 
+  const deleteContact = (id, name) => {
+    if (window.confirm(`Delete ${name}?`)) {
+      phoneBookService
+        .remove(id)
+        .then(() => {
+          setPersons(persons.filter(person => person.id !== id));
+        });
+    }
+  };
 
   const handleNameChange = (event) => {
     setNewName(event.target.value);
@@ -90,7 +99,7 @@ const App = () => {
         handlePhoneChange={handlePhoneChange} addContact={addContact}
       />
       <h2>Numbers</h2>
-      <Persons filteredPersons={filteredPersons} />
+      <Persons filteredPersons={filteredPersons} deleteContact={deleteContact} />
     </div>
   )
 }
