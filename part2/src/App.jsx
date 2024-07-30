@@ -24,45 +24,44 @@ const App = () => {
         setPersons(initialData)
       })
   }, [])
-  /*
-  const toggleImportanceOf = id => {
-    const note = notes.find(n => n.id === id)
-    const changedNote = { ...note, important: !note.important }
 
-    noteService
-      .update(id, changedNote).then(returnedNote => {
-        setNotes(notes.map(note => note.id !== id ? note : returnedNote))
-      })
-
-      .catch(error => {
-        alert(
-          `the note '${note.content}' was already deleted from server`
-        )
-        setNotes(notes.filter(n => n.id !== id))
-      })
-  }
-*/
   const addContact = (event) => {
-    event.preventDefault()
+    event.preventDefault();
 
-    if (persons.some(person => person.name === newName)) {
-      alert(`${newName} is already added to phonebook`);
-      return;
+    const existingPerson = persons.find(person => person.name === newName);
+
+    if (existingPerson) {
+      if (window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
+        const updatedPerson = { ...existingPerson, phone: newPhone };
+
+        phoneBookService
+          .update(existingPerson.id, updatedPerson)
+          .then(returnedPerson => {
+            setPersons(persons.map(person => person.id !== existingPerson.id ? person : returnedPerson));
+            setNewName('');
+            setNewPhone('');
+          })
+          .catch(error => {
+            alert(`The contact '${existingPerson.name}' was already deleted from server`);
+            setPersons(persons.filter(person => person.id !== existingPerson.id));
+          });
+      }
+    } else {
+      const newPerson = {
+        name: newName,
+        phone: newPhone
+      };
+
+      phoneBookService
+        .create(newPerson)
+        .then(returnedPerson => {
+          setPersons(persons.concat(returnedPerson));
+          setNewName('');
+          setNewPhone('');
+        });
     }
+  };
 
-    const noteObject = {
-      name: newName,
-      phone: newPhone
-    }
-
-    phoneBookService
-      .create(noteObject)
-      .then(returnedNote => {
-        setPersons(persons.concat(returnedNote))
-        setNewName('')
-        setNewPhone("")
-      })
-  }
 
   const deleteContact = (id, name) => {
     if (window.confirm(`Delete ${name}?`)) {
